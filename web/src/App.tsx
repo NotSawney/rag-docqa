@@ -11,7 +11,7 @@ type Turn = {
 
 const EXAMPLES = [
   "How many data sources can I connect on the Starter plan?",
-  "How long are cached query results retained?",
+  "How many users does the Business plan support?",
   "Does Aurora support single sign-on?",
 ];
 

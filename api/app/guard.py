@@ -5,8 +5,8 @@ is answered "I don't know" WITHOUT spending a Claude call.
 from .models import Hit
 
 REFUSAL = (
-    "No encontré esa información en los documentos provistos, así que no puedo "
-    "responder con certeza. Reformulá la pregunta o agregá el documento relevante."
+    "I couldn't find that in the provided documents, so I can't answer with "
+    "confidence. Try rephrasing, or add the relevant document to the corpus."
 )
 
 

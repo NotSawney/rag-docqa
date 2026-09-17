@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     # free, offline — for e2e testing without spending the Claude key).
     llm_provider: str = "anthropic"
 
+    # Browser origins allowed to call the API (comma-separated). The Vite/nginx
+    # UI lives on a different origin, so CORS must permit it explicitly.
+    cors_origins: str = "http://localhost:5173"
+
     # Claude generation models (spec: Haiku default, escalate to Sonnet).
     answer_model: str = "claude-haiku-4-5"
     escalation_model: str = "claude-sonnet-5"

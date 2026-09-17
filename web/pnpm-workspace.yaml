@@ -1,0 +1,3 @@
+# pnpm 10+ blocks postinstall scripts unless allow-listed here.
+allowBuilds:
+  esbuild: true

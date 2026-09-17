@@ -2,6 +2,7 @@
 from contextlib import contextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .db import connect, init_db
@@ -12,6 +13,13 @@ from .retrieval import retrieve
 from .schemas import Answer, AskRequest, Citation
 
 app = FastAPI(title="RAG Document Q&A", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @contextmanager
@@ -45,10 +53,12 @@ def ask(req: AskRequest) -> Answer:
         # Guard refuses without spending a Claude call.
         return Answer(text=REFUSAL, citations=[], grounded=False, model=None)
 
-    text, model = answer(req.question, hits)
+    # Cite only above-threshold hits, and feed the LLM the same set, so the
+    # `[n]` it emits maps 1:1 onto citations[n-1] for the UI to highlight.
+    relevant = [h for h in hits if h.score >= settings.score_threshold]
+    text, model = answer(req.question, relevant)
     citations = [
         Citation(title=h.title, page=h.page, snippet=h.content[:200], score=round(h.score, 3))
-        for h in hits
-        if h.score >= settings.score_threshold
+        for h in relevant
     ]
     return Answer(text=text, citations=citations, grounded=True, model=model)

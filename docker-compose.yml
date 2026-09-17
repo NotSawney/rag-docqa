@@ -32,7 +32,15 @@ services:
       db:
         condition: service_healthy
 
-  # web service is added on Day 3 (React/Vite chat UI).
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_API_URL: http://localhost:8000
+    ports:
+      - "5173:80"
+    depends_on:
+      - api
 
 volumes:
   pgdata:
